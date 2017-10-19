@@ -65,3 +65,73 @@ class BilleteraElectronica:
 			totalDebito += debito.monto
 
 		return totalDebito
+
+	# Metodo Saldo
+	# Descripcion: retorna el monto disponible que se tiene para consumir, es decir el saldo
+	def saldo(self):
+
+		saldoTotal = 0 
+
+		# Verificamos que haya credito en la lista de credito
+		try:
+			assert(len(self.creditos) != 0)
+		# De lo contario, se cierra el programa
+		except:
+			print("Error: No hay credito")
+			return 0
+		
+		saldoTotal = self.montoTotalCreditos() - self.montoTotalDebitos()
+
+		return saldoTotal
+
+	# Metodo Recarga
+	# Descripcion: anade un objeto tipo credito a la lista de creditos.
+	def recargar(self, monto, fechaTrans, idEstablecimiento):
+		
+		# Verificamos que el monto a recargar sea mayor a cero
+		try: 
+			assert(monto > 0)
+		# De lo contrario, se cierra el programa
+		except:
+			print("Error: no introdujo saldo suficiente")
+			return False
+		
+		# Instanciamos el objeto credito
+		cre = Creditos(monto, fechaTrans,idEstablecimiento)
+		# Anadimos objeto credito a la lista de creditos
+		self.creditos.append(cre)
+
+		print("Se recargo: " + str(monto))
+
+		return True
+
+	# Metodo Consumir
+	# Descripcion: anade un objeto tipo debito a la lista de debitos.
+	def consumir(self, monto, fechaTrans, idEstablecimiento, pin):
+
+		# Verificamos que codigo secreto introducido se igual al de la persona que consume,
+		# que el saldo disponible alcance para consumir el monto introducido y que el monto 
+		# introducido sea mayor a cero
+		try:
+			assert(self.pin == pin and self.saldo() >= monto and monto > 0)
+		# De lo contraio, se cierra el programa
+		except:
+			print("Error: no posee saldo suficiente o ingreso pin invalido")
+			return False 
+
+		# Instaciamos objeto debito
+		de = Debitos(monto, fechaTrans, idEstablecimiento)
+		# Anadimos objeto debito a la lista de debitos
+		self.debitos.append(de)
+
+		print("Se consumio: " + str(monto))
+
+		return True
+
+
+
+
+
+
+
+
